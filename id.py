@@ -7,6 +7,9 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import random
+import pyotp
+from pytz import timezone
+import pytz
 
 # Function to fetch student information from CSV file
 def fetch_student_info(student_id):
@@ -29,11 +32,11 @@ def send_verification_email(email, verification_code):
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         # Log in to your Gmail account
-        server.login("idgenerator.vcet@gmail.com", "gajv vboa hhfz nefq")
+        server.login("your_email@gmail.com", "your_password")
         
         # Compose message
         msg = MIMEMultipart()
-        msg['From'] = "idgenerator.vcet@gmail.com"
+        msg['From'] = "your_email@gmail.com"
         msg['To'] = email
         msg['Subject'] = "Verification Code for ID Card Generation"
         
@@ -51,10 +54,65 @@ def send_verification_email(email, verification_code):
         st.error(f"Error sending verification email: {e}")
         return False
 
-# Function to generate digital ID
+# Function to generate digital ID with QR code
 def generate_digital_id(student_info):
-    # Digital ID generation code remains the same
-    pass
+    try:
+        # Generate QR code with student information
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(student_info['url'])
+        qr.make(fit=True)
+
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Create digital ID image with student information
+        digital_id = Image.new('RGB', (400, 600), color = (255, 255, 255))
+        d = ImageDraw.Draw(digital_id)
+        
+        font = ImageFont.truetype('arial.ttf', size=20)
+        
+        d.text((10,10), f"Name: {student_info['name']}", font=font, fill=(0,0,0))
+        d.text((10,40), f"Student ID: {student_info['stuid']}", font=font, fill=(0,0,0))
+        d.text((10,70), f"Branch: {student_info['branch']}", font=font, fill=(0,0,0))
+        d.text((10,100), f"College: {student_info['college']}", font=font, fill=(0,0,0))
+        
+        digital_id.paste(img, (50, 150))
+        
+        digital_id.save(f"{student_info['stuid']}.png")
+        
+        return f"{student_info['stuid']}.png"
+    except Exception as e:
+        st.error(f"Error generating digital ID: {e}")
+        return None
+
+# Function to generate and save OTP using pyotp
+def generate_and_save_otp(student_id):
+    try:
+        totp = pyotp.TOTP(student_id)
+        otp = totp.now()
+        with open('otp_cache.txt', 'w') as file:
+            file.write(otp)
+        return otp
+    except Exception as e:
+        st.error(f"Error generating OTP: {e}")
+        return None
+
+# Function to verify OTP
+def verify_otp(student_id, user_otp):
+    try:
+        with open('otp_cache.txt', 'r') as file:
+            otp = file.read()
+            if otp == user_otp:
+                return True
+            else:
+                return False
+    except Exception as e:
+        st.error(f"Error verifying OTP: {e}")
+        return False
 
 # Main function
 def main():
@@ -70,11 +128,14 @@ def main():
         if student_info:
             email = student_info.get("email")
             if email:
-                verification_code = str(random.randint(10000, 99999))
-                if send_verification_email(email, verification_code):
-                    st.success("Verification email sent successfully.")
+                otp = generate_and_save_otp(student_id)
+                if otp:
+                    if send_verification_email(email, otp):
+                        st.success("Verification email sent successfully.")
+                    else:
+                        st.error("Failed to send verification email.")
                 else:
-                    st.error("Failed to send verification email.")
+                    st.error("Failed to generate OTP.")
             else:
                 st.error("Email not found in student information.")
         else:
@@ -91,23 +152,20 @@ def main():
                 st.error("Student information not found.")
                 return
             
-            # Check if the verification code matches the one stored in the CSV data
-            stored_verification_code = student_info.get("verification_code")
-            if not stored_verification_code:
-                st.error("Verification code not found.")
-                return
-            
-            if verification_code == stored_verification_code:
-                generate_digital_id(student_info)
-                st.success(f"Your Digital ID has been successfully created as '{student_id}.png'")
+            if verify_otp(student_id, verification_code):
+                digital_id_file = generate_digital_id(student_info)
+                if digital_id_file:
+                    st.success(f"Your Digital ID has been successfully created as '{digital_id_file}'")
 
-                # Download button
-                if os.path.exists(f"{student_id}.png"):
-                    st.download_button(label="Download ID", data=f"{student_id}.png", file_name=f"{student_id}.png", mime="image/png")
+                    # Download button
+                    if os.path.exists(digital_id_file):
+                        st.download_button(label="Download ID", data=digital_id_file, file_name=digital_id_file, mime="image/png")
+                    else:
+                        st.warning("Digital ID image not found.")
                 else:
-                    st.warning("Digital ID image not found.")
+                    st.error("Failed to generate digital ID.")
             else:
-                st.error("Verification code does not match.")
+                st.error("Verification code is invalid.")
         except ValueError:
             st.error("Invalid student ID. Please enter an integer.")
         except Exception as e:
