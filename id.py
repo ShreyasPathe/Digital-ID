@@ -1,7 +1,7 @@
 import streamlit as st
 import csv
 import qrcode
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -70,20 +70,14 @@ def generate_digital_id(student_info):
         digital_id = Image.new('RGB', (400, 600), color = (255, 255, 255))
         d = ImageDraw.Draw(digital_id)
         
-        # Specify default font
-        font = ImageFont.load_default()
-        
-        d.text((10,10), f"Name: {student_info['name']}", font=font, fill=(0,0,0))
-        d.text((10,40), f"Student ID: {student_info['stuid']}", font=font, fill=(0,0,0))
-        d.text((10,70), f"Branch: {student_info['branch']}", font=font, fill=(0,0,0))
-        d.text((10,100), f"College: {student_info['college']}", font=font, fill=(0,0,0))
+        d.text((10,10), f"Name: {student_info['name']}", fill=(0,0,0))
+        d.text((10,40), f"Student ID: {student_info['stuid']}", fill=(0,0,0))
+        d.text((10,70), f"Branch: {student_info['branch']}", fill=(0,0,0))
+        d.text((10,100), f"College: {student_info['college']}", fill=(0,0,0))
         
         digital_id.paste(img, (50, 150))
         
-        file_name = f"{student_info['stuid']}.png"
-        digital_id.save(file_name)
-        
-        return file_name
+        return digital_id
     except Exception as e:
         st.error(f"Error generating digital ID: {e}")
         return None
@@ -151,15 +145,13 @@ def main():
                 return
             
             if verify_otp(verification_code):
-                digital_id_file = generate_digital_id(student_info)
-                if digital_id_file:
-                    st.success(f"Your Digital ID has been successfully created as '{digital_id_file}'")
+                digital_id_image = generate_digital_id(student_info)
+                if digital_id_image:
+                    st.image(digital_id_image, caption="Digital ID")
 
                     # Download button
-                    if os.path.exists(digital_id_file):
-                        st.download_button(label="Download ID", data=digital_id_file, file_name=digital_id_file, mime="image/png")
-                    else:
-                        st.warning("Digital ID image not found.")
+                    digital_id_image.save(f"{student_info['stuid']}.png")  # Save the image
+                    st.download_button(label="Download ID", data=f"{student_info['stuid']}.png", file_name=f"{student_info['stuid']}.png", mime="image/png")
                 else:
                     st.error("Failed to generate digital ID.")
             else:
