@@ -15,7 +15,7 @@ def fetch_student_info(student_id):
         with open('student.csv', 'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                if int(row['stuid']) == _id:
+                if int(row['stuid']) == student_id:
                     return row
         return None
     except Exception as e:
