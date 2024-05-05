@@ -1,7 +1,6 @@
 pymongo
 streamlit
 qrcode
-os 
 smtplib
 random
 PIL
