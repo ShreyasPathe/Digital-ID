@@ -1,6 +1,6 @@
-stuid,name,bloodgroup,branch,add,age,contact,dob,college,gender,stuid,url,email,verification_code
-223494106,Shreyas Pathe,A+,IT,Naigaon East,20,8637717076,28/01/2004,VCET,Male,223494106,https://i.postimg.cc/3RfFt07G/shreyas.jpg,shreyas.223494106@vcet.edu.in,70285
-223394106,Kishor Madane,B+,IT,Vasai West,20,7447765404,19/02/2004,VCET,Male,223394106,https://i.postimg.cc/gJkVtdxM/kishor.jpg,kishor.223394106@vcet.edu.in,
-223544106,Pratik Patil,B+,IT,Kandivali East,19,8779206048,20/01/2005,VCET,Male,223544106,https://i.postimg.cc/wxnWMyyg/pratik.jpg,pratik.223544106@vcet.edu.in,
-223384201,Khushi Machhi,A+,IT,Dahanu Road,20,8999013220,27/08/2004,VCET,Female,223384201,https://i.postimg.cc/0NNGcPMV/khushi.jpg,khushi.223384201@vcet.edu.in,
-221213109,Abhishek Barote,AB+,,Naigaon East,20,7773920147,21/02/2004,VCET,Male,221213109,https://i.postimg.cc/FR3YxBZP/abhishek.jpg,abhishek.221213109@vcet.edu.in,58894
+name,bloodgroup,branch,add,age,contact,dob,college,gender,stuid,url,email,verification_code
+Shreyas Pathe,A+,IT,Naigaon East,20,8637717076,28/01/2004,VCET,Male,223494106,https://i.postimg.cc/3RfFt07G/shreyas.jpg,shreyas.223494106@vcet.edu.in,70285
+Kishor Madane,B+,IT,Vasai West,20,7447765404,19/02/2004,VCET,Male,223394106,https://i.postimg.cc/gJkVtdxM/kishor.jpg,kishor.223394106@vcet.edu.in,
+Pratik Patil,B+,IT,Kandivali East,19,8779206048,20/01/2005,VCET,Male,223544106,https://i.postimg.cc/wxnWMyyg/pratik.jpg,pratik.223544106@vcet.edu.in,
+Khushi Machhi,A+,IT,Dahanu Road,20,8999013220,27/08/2004,VCET,Female,223384201,https://i.postimg.cc/0NNGcPMV/khushi.jpg,khushi.223384201@vcet.edu.in,
+Abhishek Barote,AB+,,Naigaon East,20,7773920147,21/02/2004,VCET,Male,221213109,https://i.postimg.cc/FR3YxBZP/abhishek.jpg,abhishek.221213109@vcet.edu.in,58894
