@@ -55,7 +55,7 @@ def send_verification_email(email, verification_code):
 def generate_digital_id(student_info):
     try:
         # Creating ID card image
-        image = Image.new('RGB', (800, 600), (255, 255, 255))
+        image = Image.new('RGB', (1000, 900), (255, 255, 255))
         draw = ImageDraw.Draw(image)
         font = ImageFont.load_default()
 
@@ -65,12 +65,12 @@ def generate_digital_id(student_info):
         draw.text((x, y), college_name, fill=(0, 0, 0), font=font)
 
         # Student ID
-        x, y = 50, 200
+        x, y = 50, 650
         student_id = student_info.get("stuid")
         draw.text((x, y), f"Student ID: {student_id}", fill=(0, 0, 0), font=font)
 
         # Full Name
-        x, y = 50, 300
+        x, y = 50, 250
         full_name = student_info.get("name", "Unknown")
         draw.text((x, y), f"Name: {full_name}", fill=(0, 0, 0), font=font)
 
@@ -80,7 +80,7 @@ def generate_digital_id(student_info):
         draw.text((x, y), f"Gender: {gender}", fill=(0, 0, 0), font=font)
 
         # Date of Birth
-        x, y = 50, 400
+        x, y = 50, 450
         dob = student_info.get("dob", "Unknown")
         draw.text((x, y), f"Date of Birth: {dob}", fill=(0, 0, 0), font=font)
 
@@ -90,7 +90,7 @@ def generate_digital_id(student_info):
         draw.text((x, y), f"Age: {age}", fill=(0, 0, 0), font=font)
 
         # Blood Group
-        x, y = 50, 450
+        x, y = 50, 550
         blood_group = student_info.get("bloodgroup", "Unknown")
         draw.text((x, y), f"Blood Group: {blood_group}", fill=(255, 0, 0), font=font)
 
@@ -114,7 +114,7 @@ def generate_digital_id(student_info):
         # Paste QR code onto the ID card image
         id_card_image = Image.open(image_file_name)
         qr_code_image = Image.open(f"{student_id}_qr.png")
-        id_card_image.paste(qr_code_image, (600, 450))
+        id_card_image.paste(qr_code_image, (600, 350))
         id_card_image.save(image_file_name)
 
         return image_file_name
