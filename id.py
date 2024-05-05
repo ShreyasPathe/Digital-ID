@@ -22,6 +22,7 @@ def fetch_student_info(student_id):
         st.error(f"Error fetching student information: {e}")
         return None
 
+
 # Function to send verification email with a random code
 def send_verification_email(student_id):
     # Email sending code remains the same
