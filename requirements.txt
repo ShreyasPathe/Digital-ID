@@ -1,4 +1,3 @@
 qrcode
 pyotp
 Image
-ImageFont
