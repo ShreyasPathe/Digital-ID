@@ -57,7 +57,7 @@ def generate_digital_id(student_info):
         # Creating ID card image
         image = Image.new('RGB', (1000, 900), (255, 255, 255))
         draw = ImageDraw.Draw(image)
-        font = ImageFont.truetype('arial.ttf', size=45)
+        font = ImageFont.load_default()
 
         # College name
         x, y = 50, 50
@@ -93,6 +93,10 @@ def generate_digital_id(student_info):
         x, y = 50, 550
         blood_group = student_info.get("bloodgroup", "Unknown")
         draw.text((x, y), blood_group, fill=(255, 0, 0), font=font)
+
+        # Student ID
+        x, y = 50, 650
+        draw.text((x, y), str(student_id), fill=(0, 0, 0), font=font)
 
         # Address
         x, y = 50, 750
