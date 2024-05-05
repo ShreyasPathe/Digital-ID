@@ -54,38 +54,66 @@ def send_verification_email(email, verification_code):
 # Function to generate digital ID with QR code
 def generate_digital_id(student_info):
     try:
-        # Generate QR code with student information
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(student_info['url'])
-        qr.make(fit=True)
+        # Creating ID card image
+        image = Image.new('RGB', (1000, 900), (255, 255, 255))
+        draw = ImageDraw.Draw(image)
+        font = ImageFont.truetype('arial.ttf', size=45)
 
-        img = qr.make_image(fill_color="black", back_color="white")
-        
-        # Create digital ID image with student information
-        digital_id = Image.new('RGB', (400, 600), color=(255, 255, 255))
-        d = ImageDraw.Draw(digital_id)
-        
-        # Load font
-        font = ImageFont.load_default()
-        
-        # Draw student information
-        d.text((20, 20), f"Name: {student_info['name']}", fill=(0, 0, 0), font=font)
-        d.text((20, 50), f"Blood Group: {student_info['bloodgroup']}", fill=(255, 0, 0), font=font)
-        d.text((20, 80), f"Branch: {student_info['branch']}", fill=(0, 0, 0), font=font)
-        d.text((20, 110), f"Address: {student_info['add']}", fill=(0, 0, 0), font=font)
-        
-        # Draw student ID
-        d.text((250, 20), f"ID No.: {student_info['stuid']}", fill=(255, 0, 0), font=font)
-        
-        # Paste QR code
-        digital_id.paste(img, (240, 350))
-        
-        return digital_id
+        # College name
+        x, y = 50, 50
+        college_name = student_info.get("college", "Unknown")
+        draw.text((x, y), college_name, fill=(0, 0, 0), font=font)
+
+        # Student ID
+        x, y = 650, 75
+        student_id = student_info.get("stuid")
+        draw.text((x, y), f"DID {student_id}", fill=(255, 0, 0), font=font)
+
+        # Full Name
+        x, y = 50, 250
+        full_name = student_info.get("name", "Unknown")
+        draw.text((x, y), full_name, fill=(0, 0, 0), font=font)
+
+        # Gender
+        x, y = 50, 350
+        gender = student_info.get("gender", "Unknown")
+        draw.text((x, y), gender, fill=(0, 0, 0), font=font)
+
+        # Date of Birth
+        x, y = 50, 450
+        dob = student_info.get("dob", "Unknown")
+        draw.text((x, y), dob, fill=(0, 0, 0), font=font)
+
+        # Age
+        x, y = 250, 350
+        age = student_info.get("age", "Unknown")
+        draw.text((x, y), f"{age}", fill=(0, 0, 0), font=font)
+
+        # Blood Group
+        x, y = 50, 550
+        blood_group = student_info.get("bloodgroup", "Unknown")
+        draw.text((x, y), blood_group, fill=(255, 0, 0), font=font)
+
+        # Address
+        x, y = 50, 750
+        address = student_info.get("add", "Unknown")
+        draw.text((x, y), address, fill=(0, 0, 0), font=font)
+
+        # Save ID card image
+        image_file_name = f"{student_id}.png"
+        image.save(image_file_name)
+
+        # Generate QR code with student ID
+        generate_qr_code_with_student_id(student_id)
+
+        # Paste QR code onto the ID card image
+        id_card_image = Image.open(image_file_name)
+        qr_code_image = Image.open(f"{student_id}.jpg")
+        id_card_image.paste(qr_code_image, (600, 350))
+        id_card_image.save(image_file_name)
+
+        return image_file_name
+
     except Exception as e:
         st.error(f"Error generating digital ID: {e}")
         return None
@@ -153,13 +181,13 @@ def main():
                 return
             
             if verify_otp(verification_code):
-                digital_id_image = generate_digital_id(student_info)
-                if digital_id_image:
+                digital_id_file = generate_digital_id(student_info)
+                if digital_id_file:
+                    digital_id_image = Image.open(digital_id_file)
                     st.image(digital_id_image, caption="Digital ID", use_column_width=True)
 
                     # Download button
-                    digital_id_image.save(f"{student_info['stuid']}.png")  # Save the image
-                    st.download_button(label="Download ID", data=f"{student_info['stuid']}.png", file_name=f"{student_info['stuid']}.png", mime="image/png")
+                    st.download_button(label="Download ID", data=digital_id_file, file_name=digital_id_file, mime="image/png")
                 else:
                     st.error("Failed to generate digital ID.")
             else:
