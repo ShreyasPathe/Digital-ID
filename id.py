@@ -65,43 +65,34 @@ def generate_digital_id(student_info):
         draw.text((x, y), college_name, fill=(0, 0, 0), font=font)
 
         # Student ID
-        x, y = 650, 75
+        x, y = 50, 650
         student_id = student_info.get("stuid")
-        draw.text((x, y), f"DID {student_id}", fill=(255, 0, 0), font=font)
+        draw.text((x, y), f"Student ID: {student_id}", fill=(0, 0, 0), font=font)
 
         # Full Name
         x, y = 50, 250
         full_name = student_info.get("name", "Unknown")
-        draw.text((x, y), full_name, fill=(0, 0, 0), font=font)
+        draw.text((x, y), f"Name: {full_name}", fill=(0, 0, 0), font=font)
 
         # Gender
         x, y = 50, 350
         gender = student_info.get("gender", "Unknown")
-        draw.text((x, y), gender, fill=(0, 0, 0), font=font)
+        draw.text((x, y), f"Gender: {gender}", fill=(0, 0, 0), font=font)
 
         # Date of Birth
         x, y = 50, 450
         dob = student_info.get("dob", "Unknown")
-        draw.text((x, y), dob, fill=(0, 0, 0), font=font)
+        draw.text((x, y), f"Date of Birth: {dob}", fill=(0, 0, 0), font=font)
 
         # Age
         x, y = 250, 350
         age = student_info.get("age", "Unknown")
-        draw.text((x, y), f"{age}", fill=(0, 0, 0), font=font)
+        draw.text((x, y), f"Age: {age}", fill=(0, 0, 0), font=font)
 
         # Blood Group
         x, y = 50, 550
         blood_group = student_info.get("bloodgroup", "Unknown")
-        draw.text((x, y), blood_group, fill=(255, 0, 0), font=font)
-
-        # Student ID
-        x, y = 50, 650
-        draw.text((x, y), str(student_id), fill=(0, 0, 0), font=font)
-
-        # Address
-        x, y = 50, 750
-        address = student_info.get("add", "Unknown")
-        draw.text((x, y), address, fill=(0, 0, 0), font=font)
+        draw.text((x, y), f"Blood Group: {blood_group}", fill=(255, 0, 0), font=font)
 
         # Save ID card image
         image_file_name = f"{student_id}.png"
@@ -123,7 +114,7 @@ def generate_digital_id(student_info):
         # Paste QR code onto the ID card image
         id_card_image = Image.open(image_file_name)
         qr_code_image = Image.open(f"{student_id}_qr.png")
-        id_card_image.paste(qr_code_image, (600, 750))
+        id_card_image.paste(qr_code_image, (600, 350))
         id_card_image.save(image_file_name)
 
         return image_file_name
