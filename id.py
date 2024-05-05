@@ -9,13 +9,13 @@ from email.mime.text import MIMEText
 import random
 
 # Function to fetch student information from CSV file
-def fetch_student_info(_id):
+def fetch_student_info(student_id):
     try:
         # Read data from CSV file
         with open('student.csv', 'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                if int(row['stuid']) == _id:
+                if int(row['_id']) == student_id:
                     return row
         return None
     except Exception as e:
@@ -23,7 +23,7 @@ def fetch_student_info(_id):
         return None
 
 # Function to send verification email with a random code
-def send_verification_email(_id):
+def send_verification_email(student_id):
     # Email sending code remains the same
     pass
 
@@ -46,7 +46,7 @@ def main():
         if student_info:
             email = student_info.get("email")
             if email:
-                send_verification_email(_id)
+                send_verification_email(student_id)
             else:
                 st.error("Email not found in student information.")
         else:
@@ -58,7 +58,7 @@ def main():
         # Validate student ID and verification code
         try:
             student_id = int(student_id)
-            student_info = fetch_student_info(t_id)
+            student_info = fetch_student_info(student_id)
             if not student_info:
                 st.error("Student information not found.")
                 return
@@ -74,8 +74,8 @@ def main():
                 st.success(f"Your Digital ID has been successfully created as '{student_id}.png'")
 
                 # Download button
-                if os.path.exists(f"{_id}.png"):
-                    st.download_button(label="Download ID", data=f"{t_id}.png", file_name=f"{_id}.png", mime="image/png")
+                if os.path.exists(f"{student_id}.png"):
+                    st.download_button(label="Download ID", data=f"{student_id}.png", file_name=f"{student_id}.png", mime="image/png")
                 else:
                     st.warning("Digital ID image not found.")
             else:
