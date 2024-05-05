@@ -32,7 +32,7 @@ def send_verification_email(email, verification_code):
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         # Log in to your Gmail account
-        server.login("your_email@gmail.com", "your_password")
+        server.login("idgenerator.vcet@gmail.com", "gajv vboa hhfz nefq")
         
         # Compose message
         msg = MIMEMultipart()
