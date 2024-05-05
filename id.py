@@ -23,9 +23,33 @@ def fetch_student_info(student_id):
         return None
 
 # Function to send verification email with a random code
-def send_verification_email(student_id):
-    # Email sending code remains the same
-    pass
+def send_verification_email(email, verification_code):
+    try:
+        # Set up SMTP server
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        # Log in to your Gmail account
+        server.login("idgenerator.vcet@gmail.com", "gajv vboa hhfz nefq")
+        
+        # Compose message
+        msg = MIMEMultipart()
+        msg['From'] = "idgenerator.vcet@gmail.com"
+        msg['To'] = email
+        msg['Subject'] = "Verification Code for ID Card Generation"
+        
+        body = f"Your verification code is: {verification_code}"
+        msg.attach(MIMEText(body, 'plain'))
+        
+        # Send email
+        server.send_message(msg)
+        
+        # Close server connection
+        server.quit()
+        
+        return True
+    except Exception as e:
+        st.error(f"Error sending verification email: {e}")
+        return False
 
 # Function to generate digital ID
 def generate_digital_id(student_info):
@@ -46,7 +70,11 @@ def main():
         if student_info:
             email = student_info.get("email")
             if email:
-                send_verification_email(student_id)
+                verification_code = str(random.randint(10000, 99999))
+                if send_verification_email(email, verification_code):
+                    st.success("Verification email sent successfully.")
+                else:
+                    st.error("Failed to send verification email.")
             else:
                 st.error("Email not found in student information.")
         else:
