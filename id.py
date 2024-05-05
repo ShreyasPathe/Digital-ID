@@ -108,12 +108,22 @@ def generate_digital_id(student_info):
         image.save(image_file_name)
 
         # Generate QR code with student ID
-        generate_qr_code_with_student_id(student_id)
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(f"DID: {student_id}")
+        qr.make(fit=True)
+
+        qr_image = qr.make_image(fill_color="black", back_color="white")
+        qr_image.save(f"{student_id}_qr.png")
 
         # Paste QR code onto the ID card image
         id_card_image = Image.open(image_file_name)
-        qr_code_image = Image.open(f"{student_id}.jpg")
-        id_card_image.paste(qr_code_image, (600, 350))
+        qr_code_image = Image.open(f"{student_id}_qr.png")
+        id_card_image.paste(qr_code_image, (600, 750))
         id_card_image.save(image_file_name)
 
         return image_file_name
