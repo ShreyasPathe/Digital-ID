@@ -12,7 +12,7 @@ import random
 def fetch_student_info(student_id):
     try:
         # Read data from CSV file
-        with open('student_data.csv', 'r') as file:
+        with open('practicedb.student.csv', 'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 if int(row['stuid']) == student_id:
