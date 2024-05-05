@@ -1,3 +1,5 @@
 qrcode
 pyotp
-
+Image
+ImageDraw
+ImageFont
