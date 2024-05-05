@@ -70,13 +70,8 @@ def generate_digital_id(student_info):
         digital_id = Image.new('RGB', (400, 600), color = (255, 255, 255))
         d = ImageDraw.Draw(digital_id)
         
-        # Specify font file path
-        font_path = "arial.ttf"
-        if not os.path.exists(font_path):
-            st.warning("Font file not found. Please make sure 'arial.ttf' is available.")
-            return None
-        
-        font = ImageFont.truetype(font_path, size=20)
+        # Specify default font
+        font = ImageFont.load_default()
         
         d.text((10,10), f"Name: {student_info['name']}", font=font, fill=(0,0,0))
         d.text((10,40), f"Student ID: {student_info['stuid']}", font=font, fill=(0,0,0))
