@@ -1,7 +1,7 @@
 import streamlit as st
 import csv
 import qrcode
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -67,15 +67,23 @@ def generate_digital_id(student_info):
         img = qr.make_image(fill_color="black", back_color="white")
         
         # Create digital ID image with student information
-        digital_id = Image.new('RGB', (400, 600), color = (255, 255, 255))
+        digital_id = Image.new('RGB', (400, 600), color=(255, 255, 255))
         d = ImageDraw.Draw(digital_id)
         
-        d.text((10,10), f"Name: {student_info['name']}", fill=(0,0,0))
-        d.text((10,40), f"Student ID: {student_info['stuid']}", fill=(0,0,0))
-        d.text((10,70), f"Branch: {student_info['branch']}", fill=(0,0,0))
-        d.text((10,100), f"College: {student_info['college']}", fill=(0,0,0))
+        # Load font
+        font = ImageFont.load_default()
         
-        digital_id.paste(img, (50, 150))
+        # Draw student information
+        d.text((20, 20), f"Name: {student_info['name']}", fill=(0, 0, 0), font=font)
+        d.text((20, 50), f"Blood Group: {student_info['bloodgroup']}", fill=(255, 0, 0), font=font)
+        d.text((20, 80), f"Branch: {student_info['branch']}", fill=(0, 0, 0), font=font)
+        d.text((20, 110), f"Address: {student_info['add']}", fill=(0, 0, 0), font=font)
+        
+        # Draw student ID
+        d.text((250, 20), f"ID No.: {student_info['stuid']}", fill=(255, 0, 0), font=font)
+        
+        # Paste QR code
+        digital_id.paste(img, (240, 350))
         
         return digital_id
     except Exception as e:
@@ -147,7 +155,7 @@ def main():
             if verify_otp(verification_code):
                 digital_id_image = generate_digital_id(student_info)
                 if digital_id_image:
-                    st.image(digital_id_image, caption="Digital ID")
+                    st.image(digital_id_image, caption="Digital ID", use_column_width=True)
 
                     # Download button
                     digital_id_image.save(f"{student_info['stuid']}.png")  # Save the image
