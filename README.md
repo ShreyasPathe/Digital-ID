@@ -1,6 +1,3 @@
-Here's a `README.md` file for your ID Generator project that uses Streamlit and takes input from a CSV file. The project utilizes libraries such as `qrcode`, `pyotp`, and `Pillow` (imported as `Image`).
-
-```markdown
 # ID Generator Project
 
 This project, titled **ID Generator**, uses Streamlit to create a web application that generates IDs based on input from a CSV file. The application integrates functionalities like QR code generation, Time-based One-Time Passwords (TOTP), and image processing.
